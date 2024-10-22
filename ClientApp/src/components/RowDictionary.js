@@ -1,0 +1,140 @@
+import React, {Component} from 'react';
+import Edit from '@mui/icons-material/Edit';
+import Button from '@mui/material/Button';
+import '../css/ModalInputKey.css';
+import { ModalInput } from './ModalInput';
+import { REQUEST_URLS } from '../Constants'
+
+export class RowDictionary extends Component {
+
+    constructor(props) {
+        super(props);
+        this.state = {
+            edit: false, 
+            value: this.props.value,
+            lastUpdatedValue: this.props.value,
+            language: this.props.language,
+            keyName: this.props.keyName,
+            okCallback:this.onClick.bind(this),
+            cancelCallback:this.onCancel.bind(this),
+            modalValue: this.props.value,
+            caption: "Enter key value"
+        };
+    }
+
+    editValue() {
+        this.setState({
+            edit: true,
+            modalValue: this.state.value, 
+            okCallback:this.onClick.bind(this),
+            cancelCallback:this.onCancel.bind(this),
+            caption: "Enter value"
+        });
+    }
+
+    async editValueRequest(args) {
+        var response = await fetch(REQUEST_URLS.EditValue, {
+            
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(args)    
+            
+        });
+        const data = await response.json();
+        if (response.status==200) {
+            this.setState({
+                lastUpdatedValue: data.value,
+                value: data.value
+            });
+        }
+    }
+
+    onClick(newValue) {
+        this.editValueRequest({
+            KeyValue: this.state.keyName, 
+            LanguageValue: this.state.language,
+            Value: newValue
+        });
+        this.setState({edit: false});
+    }
+
+    onCancel() {
+        this.setState({
+            edit: false,
+            value: this.state.lastUpdatedValue
+        });
+    }
+
+    onEditKey() {
+        this.setState({
+            edit: true,
+            modalValue: this.state.keyName, 
+            okCallback:this.onClickEditKey.bind(this),
+            cancelCallback:this.onCancelEditKey.bind(this),
+            caption: "Enter key value"
+        });
+    }
+
+    onClickEditKey(newKey) {
+        this.editKeyRequest({
+            OldKey: this.state.keyName, 
+            NewKey: newKey 
+        });
+        this.setState({edit: false});
+    }
+
+    async editKeyRequest(args) {
+        var response = await fetch(REQUEST_URLS.EditKey, {
+            
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(args)    
+            
+        });
+        const data = await response.json();
+        if (response.status==200) {
+            this.setState({
+                keyName: data.keyValue
+            });
+        }
+    }
+
+    onCancelEditKey() {
+        this.setState({
+            edit: false
+        });
+    }
+
+    render() {
+
+        return <tr>
+            <td>
+                <Button variant='contained'>
+                    <Edit onClick={this.onEditKey.bind(this)}/>
+                </Button>
+                &nbsp;
+                {this.state.keyName}
+            </td>
+            <td>
+            <div>
+                <Button variant='contained'>
+                    <Edit onClick={this.editValue.bind(this)}/>
+                </Button>
+                &nbsp;&nbsp;
+                {this.state.value}
+                <ModalInput 
+                        modalInputOpen={this.state.edit}
+                        modalValue={this.state.modalValue} 
+                        closeInput={this.state.okCallback}
+                        cancelInput={this.state.cancelCallback}
+                        caption = {this.state.caption}
+                    ></ModalInput>
+            </div>
+            </td>
+        </tr>
+    }
+}
