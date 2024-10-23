@@ -57,9 +57,7 @@ public class DictionaryInformationController : ApiController
         {
             var msg = $"Language {Language} does not exists";
             _logger.LogError(msg);
-            var response = new JsonResult(msg);
-            response.StatusCode = 400;
-            return response;
+            return NotFound(msg);
         }
 
         _logger.LogInformation($"Getting details is started for {Language}");
@@ -115,8 +113,9 @@ public class DictionaryInformationController : ApiController
 
         _logger.LogInformation($"All keys, total {fullValues.Count()}");
 
-        return Ok(fullValues.ToList().Union(emptyValues.ToList()).
-            OrderBy(row => row.Key.KeyValue));
+        var result = fullValues.ToList().Union(emptyValues.ToList()).
+                    OrderBy(row => row.Key.KeyValue);
+        return Ok(result);
     }
 
     [HttpPost]
@@ -142,20 +141,35 @@ public class DictionaryInformationController : ApiController
             {
                 lastRowId = _context.Values.Max(row => row.RowId);
             }*/
+
+            if (!_context.Keys.Any(
+                k => k.KeyValue ==
+                Regex.Escape(args.KeyValue)))
+            {
+                _logger.LogError($"Key {args.KeyValue} not found");
+                var errorResponse = new JsonResult($"Key {args.KeyValue} not found");
+                errorResponse.StatusCode = 404;
+                return errorResponse;
+            }
+
+
+            var key = _context.Keys.First(
+                    k => k.KeyValue == Regex.Escape(args.KeyValue));
+
             var rowValues = new Values
             {
                 //RowId = lastRowId + 1,
                 Language = lang,
-                Key = _context.Keys.First(
-                    k => k.KeyValue == Regex.Escape(args.KeyValue)
-                ),//TODO:What if this key doesn't exist?
+                Key = key,
                 Value = Regex.Escape(args.Value)
             };
             _logger.LogInformation($"New value added with rowId {rowValues.RowId}");
             _context.Values.Add(rowValues);
             _context.SaveChanges();
             rowValues.Value = args.Value;
-            return new JsonResult(rowValues);
+            var response = new JsonResult(rowValues);
+            response.StatusCode = 200;
+            return response;
         }
         var row = _context.Values.First(
             row => row.Language.LanguageValue == args.LanguageValue
@@ -165,7 +179,9 @@ public class DictionaryInformationController : ApiController
         _context.SaveChanges();
         _logger.LogInformation("Existed value updated successfully");
         row.Value = args.Value;
-        return new JsonResult(row);
+        var result = new JsonResult(row);
+        result.StatusCode = 200;
+        return result;
     }
 
     [HttpPost]

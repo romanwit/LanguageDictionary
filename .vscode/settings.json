@@ -1,2 +1,4 @@
 {
+    "dotnetTestExplorer.testProjectPath": "**/*Tests*.csproj",
+    "dotnetTestExplorer.testRunner": "nunit"
 }
