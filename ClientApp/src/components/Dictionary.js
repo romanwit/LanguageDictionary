@@ -6,7 +6,7 @@ import { RowDictionary } from './RowDictionary';
 import { ModalMessage } from './ModalMessage';
 import '../css/ModalInputKey.css';
 import { ModalInput } from './ModalInput';
-import { REQUEST_URLS } from '../Constants'
+import { REQUEST_URLS } from '../Constants';
 import * as XLSX from 'xlsx';
 
 export class Dictionary extends Component {
