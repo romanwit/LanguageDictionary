@@ -1,4 +1,4 @@
-using LanguagesDictionary.Data;
+﻿using LanguagesDictionary.Data;
 using LanguagesDictionary.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -117,7 +117,7 @@ public class DictionaryInformationController : ApiController
     }
 
     [HttpPost]
-    [Route("Edit")]
+    [Route(RequestsUrls.EditRequest)]
     public JsonResult Post(UpdateValueArgs args)
     {
         if (
@@ -183,7 +183,7 @@ public class DictionaryInformationController : ApiController
     }
 
     [HttpPost]
-    [Route("AddKey")]
+    [Route(RequestsUrls.AddKeyRequest)]
     public JsonResult AddKey(AddKeyArgs args)
     {
 
@@ -207,7 +207,7 @@ public class DictionaryInformationController : ApiController
     }
 
     [HttpPost]
-    [Route("EditKey")]
+    [Route(RequestsUrls.EditKeyRequest)]
     public JsonResult EditKey(EditKeyArgs args)
     {
         if (!_context.Keys.Any(row => row.KeyValue == Regex.Escape(args.OldKey)))
@@ -244,7 +244,7 @@ public class DictionaryInformationController : ApiController
     }
 
     [HttpPost]
-    [Route("AddLanguage")]
+    [Route(RequestsUrls.AddLanguageRequest)]
     public JsonResult AddLanguage(AddLanguageArgs args)
     {
         if (_context.Languages.Any(row =>
