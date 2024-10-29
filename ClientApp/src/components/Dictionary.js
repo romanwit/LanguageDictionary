@@ -1,11 +1,13 @@
 import React, {Component} from 'react';
 import Plus from '@mui/icons-material/PlusOne';
+import Folder from '@mui/icons-material/Folder';
 import Button from '@mui/material/Button';
 import { RowDictionary } from './RowDictionary';
 import { ModalMessage } from './ModalMessage';
 import '../css/ModalInputKey.css';
 import { ModalInput } from './ModalInput';
 import { REQUEST_URLS } from '../Constants'
+import * as XLSX from 'xlsx';
 
 export class Dictionary extends Component {
 
@@ -17,8 +19,10 @@ export class Dictionary extends Component {
             showModalMessage: false,
             modalMessage: "",
             modalInputOpen: false,
-            modalInputValue: ""
+            modalInputValue: "",
+            folder: ""
         }; 
+        this.fileInputRef = React.createRef();
     }
 
     async populateDetails() {
@@ -81,12 +85,36 @@ export class Dictionary extends Component {
         this.setState({modalInputOpen: false, modalInputValue: ""});
     }
 
+    handleFileChange(event) {
+        console.log(event.target.files[0].name);
+        this.setState({folder: event.target.files[0].name});
+    }
+
+    handleClick() {
+        this.fileInputRef.current.click();
+    }
+
+
+
     renderDetails() {
         return (
             <div> 
                 <Button variant='contained' 
                     onClick={this.onClickPlus.bind(this)} >
                     <Plus/>
+                </Button>
+                <input type="file" 
+                    webkitdirectory="true" 
+                    ref={this.fileInputRef}
+                    style={{ display: 'none' }}
+                    onChange={this.handleFileChange.bind(this)} 
+                   onInput={this.handleFileChange.bind(this)} />
+                
+                {this.state.Folder}&nbsp;
+                <Button variant='contained' 
+                    style={{display:'none'}}
+                    onClick={this.handleClick.bind(this)}>
+                    <Folder/>
                 </Button>
                 
                     <ModalInput 
