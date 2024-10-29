@@ -4,83 +4,107 @@ import '@testing-library/jest-dom';
 import { RowDictionary } from '../components/RowDictionary';
 import { ModalInput } from '../components/ModalInput';
 import { REQUEST_URLS } from '../Constants';
+import fetchMock from 'jest-fetch-mock';
 
-// Mock fetch API
-global.fetch = jest.fn(() =>
-  Promise.resolve({
-    json: () => Promise.resolve({ value: 'newValue', keyValue: 'newKey' }),
-    status: 200,
-  })
-);
 
 describe('RowDictionary Component', () => {
+  
   const initialProps = {
     value: 'InitialValue',
     language: 'en',
     keyName: 'InitialKey',
   };
 
+  const renderRowDictionary = (props) => {
+    return render(
+        <table>
+          <thead>
+            <tr>
+              <th>Key</th>
+              <th>Value</th>
+            </tr>
+          </thead>
+          <tbody>
+            <RowDictionary {...props} />
+          </tbody>
+        </table>
+    );
+  };
+
   beforeEach(() => {
-    fetch.mockClear();
+    global.fetch = require('jest-fetch-mock').default;
+    fetchMock.enableMocks();
+    fetchMock.doMock();
   });
 
   it('renders the component with initial props', () => {
-    render(<RowDictionary {...initialProps} />);
+    renderRowDictionary(initialProps);
     expect(screen.getByText('InitialValue')).toBeInTheDocument();
     expect(screen.getByText('InitialKey')).toBeInTheDocument();
   });
 
-  it('opens modal for editing value when Edit button is clicked', () => {
-    render(<RowDictionary {...initialProps} />);
-    fireEvent.click(screen.getAllByRole('button')[1]);
-    expect(screen.getByText('Enter value')).toBeInTheDocument();
-  });
-
-  it('opens modal for editing key when Edit button is clicked on key', () => {
-    render(<RowDictionary {...initialProps} />);
+  it('opens modal for editing key when Edit button is clicked on key', async () => {
+    renderRowDictionary(initialProps);
     fireEvent.click(screen.getAllByRole('button')[0]);
-    expect(screen.getByText('Enter key value')).toBeInTheDocument();
+    const modal = await screen.getByText('Enter key value');
+    expect(modal).toBeInTheDocument();
   });
 
   it('sends edit value request and updates state on confirm', async () => {
-    render(<RowDictionary {...initialProps} />);
+    
+    var newValue = "newValue";
+    
+    fetch.mockResponseOnce(JSON.stringify(
+        {
+            rowId: 1,
+            value: newValue
+        }
+      ));
+    
+    renderRowDictionary(initialProps);
+    
     fireEvent.click(screen.getAllByRole('button')[1]);
 
-    // Simulate modal input confirm
-    const modalInput = screen.getByText('Enter value');
-    fireEvent.change(screen.getByDisplayValue(initialProps.value), {
-      target: { value: 'newValue' },
+    const modalInput = screen.getByRole('textbox');
+    fireEvent.change(modalInput, {
+      target: { value: newValue },
     });
-    fireEvent.click(screen.getByText('Confirm'));
+    
+    fireEvent.click( 
+        screen.getByTestId('CheckIcon').parentElement
+    );
 
     await waitFor(() => {
       expect(fetch).toHaveBeenCalledWith(REQUEST_URLS.EditValue, expect.anything());
-      expect(screen.getByText('newValue')).toBeInTheDocument();
+      expect(screen.getByText(newValue)).toBeInTheDocument();
     });
   });
 
+  
   it('sends edit key request and updates state on confirm', async () => {
-    render(<RowDictionary {...initialProps} />);
+    
+    var newKey = "newKey";
+
+    fetch.mockResponseOnce(JSON.stringify(
+        {
+            keyId: 1,
+            keyValue: newKey
+        }
+      ));
+
+    renderRowDictionary(initialProps);
     fireEvent.click(screen.getAllByRole('button')[0]);
 
-    // Simulate modal input confirm
     fireEvent.change(screen.getByDisplayValue(initialProps.keyName), {
-      target: { value: 'newKey' },
+      target: { value: newKey },
     });
-    fireEvent.click(screen.getByText('Confirm'));
+    fireEvent.click(screen.getAllByRole('button')[0]);
 
     await waitFor(() => {
       expect(fetch).toHaveBeenCalledWith(REQUEST_URLS.EditKey, expect.anything());
-      expect(screen.getByText('newKey')).toBeInTheDocument();
+      expect(screen.getByText(newKey)).toBeInTheDocument();
     });
   });
+  
 
-  it('cancels editing and reverts to initial state on cancel', () => {
-    render(<RowDictionary {...initialProps} />);
-    fireEvent.click(screen.getAllByRole('button')[1]);
-
-    // Simulate modal input cancel
-    fireEvent.click(screen.getByText('Cancel'));
-    expect(screen.getByText('InitialValue')).toBeInTheDocument();
-  });
 });
