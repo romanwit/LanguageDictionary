@@ -1,5 +1,4 @@
 using LanguagesDictionary.Data;
-using Microsoft.AspNetCore.Antiforgery;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 using Serilog;
@@ -21,16 +20,12 @@ builder.Services.AddDbContext<DictionaryDBContext>(
         builder.Configuration.GetConnectionString("DictionaryConnection"))
 );
 
-
+builder.Services.AddControllers();
+builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>
-    {
-        c.SwaggerDoc("v1", new OpenApiInfo
-        {
-            Version = "v1",
-            Title = "My API",
-            Description = "Desc API"
-        });
-    });
+{
+    c.SwaggerDoc("v1", new OpenApiInfo { Title = "Languages Dictionary", Version = "v1" });
+});
 
 var app = builder.Build();
 
@@ -48,10 +43,9 @@ else
 
 app.UseSwagger();
 app.UseSwaggerUI(c =>
-{
-    c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
-    c.RoutePrefix = String.Empty;
-});
+    {
+        c.SwaggerEndpoint("v1/swagger.json", "Languages Dictionary");
+    });
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();

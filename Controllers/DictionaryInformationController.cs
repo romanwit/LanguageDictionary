@@ -1,4 +1,4 @@
-﻿using LanguagesDictionary.Data;
+using LanguagesDictionary.Data;
 using LanguagesDictionary.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -49,8 +49,6 @@ public class DictionaryInformationController : ApiController
         }
         _context.SaveChanges();
         */
-        //var j = 0;
-        //var i = 1 / j;
 
         if (!_context.Languages.Select(row => row.LanguageValue).
             Contains(Language))
@@ -134,13 +132,7 @@ public class DictionaryInformationController : ApiController
             ) ?? _context.Languages.
                     FirstOrDefault(l =>
                         l.LanguageValue == Constants.defaultLanguage);
-            //_logger.LogInformation($"Language not found, returning default language {Constants.defaultLanguage}");
 
-            /*int lastRowId = 0;
-            if (_context.Values.Count() != 0)
-            {
-                lastRowId = _context.Values.Max(row => row.RowId);
-            }*/
 
             if (!_context.Keys.Any(
                 k => k.KeyValue ==
@@ -156,20 +148,26 @@ public class DictionaryInformationController : ApiController
             var key = _context.Keys.First(
                     k => k.KeyValue == Regex.Escape(args.KeyValue));
 
-            var rowValues = new Values
+            if (lang != null)
             {
-                //RowId = lastRowId + 1,
-                Language = lang,
-                Key = key,
-                Value = Regex.Escape(args.Value)
-            };
-            _logger.LogInformation($"New value added with rowId {rowValues.RowId}");
-            _context.Values.Add(rowValues);
-            _context.SaveChanges();
-            rowValues.Value = args.Value;
-            var response = new JsonResult(rowValues);
-            response.StatusCode = 200;
-            return response;
+                var rowValues = new Values
+                {
+                    Language = lang,
+                    Key = key,
+                    Value = Regex.Escape(args.Value)
+                };
+                _logger.LogInformation($"New value added with rowId {rowValues.RowId}");
+                _context.Values.Add(rowValues);
+                _context.SaveChanges();
+                rowValues.Value = args.Value;
+                var response = new JsonResult(rowValues);
+                response.StatusCode = 200;
+                return response;
+            }
+            else
+            {
+                throw new Exception("Lang is null");
+            }
         }
         var row = _context.Values.First(
             row => row.Language.LanguageValue == args.LanguageValue
@@ -196,14 +194,9 @@ public class DictionaryInformationController : ApiController
             _logger.LogError($"Key {args.NewKey} exists already. Returning 406");
             return response;
         }
-        /*int lastKeyId = 0;
-        if (_context.Keys.Count() != 0)
-        {
-            lastKeyId = _context.Keys.Max(row => row.KeyId);
-        }*/
+
         var rowKey = new Keys
         {
-            //KeyId = lastKeyId + 1,
             KeyValue = Regex.Escape(args.NewKey)
         };
         _context.Keys.Add(rowKey);
@@ -226,16 +219,23 @@ public class DictionaryInformationController : ApiController
         }
 
         var row = _context.Keys.FirstOrDefault(row => row.KeyValue == args.OldKey);
-        row.KeyValue = args.NewKey;
-        _context.SaveChanges();
+        if (row != null)
+        {
+            row.KeyValue = args.NewKey;
+            _context.SaveChanges();
 
-        _logger.LogInformation($"Key {args.OldKey} updated successfully to {args.NewKey}");
+            _logger.LogInformation($"Key {args.OldKey} updated successfully to {args.NewKey}");
 
-        return new JsonResult(row);
+            return new JsonResult(row);
+        }
+        else
+        {
+            throw new Exception("row is null");
+        }
     }
 
     [HttpGet]
-    [Route("Languages")]
+    [Route(RequestsUrls.ListOfLanguagesRequest)]
     public IEnumerable<string> ListOfLanguages()
     {
         var result = _context.Languages.
@@ -256,16 +256,8 @@ public class DictionaryInformationController : ApiController
             return response;
         }
 
-        /*int lastLanguageId = 0;
-        if (_context.Languages.Count() != 0)
-        {
-            lastLanguageId = _context.Languages.Max(row =>
-                row.LanguageId) + 1;
-        }*/
-
         var newLanguage = new Languages
         {
-            //LanguageId = lastLanguageId,
             LanguageValue = args.Language
         };
 

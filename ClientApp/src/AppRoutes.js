@@ -15,10 +15,6 @@ const AppRoutes = [
   {
     path:'/languages',
     element: <Languages/>
-  },
-  {
-    path: '/swagger',
-    element: <Swagger/>
   }
 
 ];

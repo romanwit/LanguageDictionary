@@ -8,6 +8,7 @@ using Microsoft.Extensions.Logging;
 using Moq;
 using Newtonsoft.Json.Linq;
 using NuGet.Protocol;
+using NuGet.Protocol.Plugins;
 using NUnit.Framework;
 using NUnit.Framework.Legacy;
 
@@ -17,9 +18,9 @@ namespace LanguagesDictionary.Tests
     [TestFixture]
     public class DictionaryInformationControllerTests
     {
-        private Mock<DictionaryDBContext> _mockContext;
-        private Mock<ILogger<DictionaryInformationController>> _mockLogger;
-        private DictionaryInformationController _controller;
+        private Mock<DictionaryDBContext> _mockContext = null!;
+        private Mock<ILogger<DictionaryInformationController>> _mockLogger = null!;
+        private DictionaryInformationController _controller = null!;
 
         public static void SetupMockDbSet<T>(Mock<DbSet<T>> mockSet, IQueryable<T> data) where T : class
         {
@@ -53,8 +54,14 @@ namespace LanguagesDictionary.Tests
             // Assert
             Assert.That(result.Result, Is.InstanceOf<NotFoundObjectResult>());
             var notFoundObject = result.Result as NotFoundObjectResult;
-            Assert.That(notFoundObject.StatusCode, Is.EqualTo(404));
-
+            if (notFoundObject != null)
+            {
+                Assert.That(notFoundObject.StatusCode, Is.EqualTo(404));
+            }
+            else
+            {
+                Assert.That(notFoundObject, Is.Not.Null);
+            }
         }
 
         [Test]
@@ -130,7 +137,14 @@ namespace LanguagesDictionary.Tests
             var okResult = new OkObjectResult(result.Result);
             Assert.That(okResult, Is.Not.Null);
             var json = JObject.Parse(okResult.Value.ToJson());
-            Assert.That(json.First.Children().Children().Count(), Is.EqualTo(2));
+            if (json.First != null)
+            {
+                Assert.That(json.First.Children().Children().Count(), Is.EqualTo(2));
+            }
+            else
+            {
+                Assert.That(json.First, Is.Not.Null);
+            }
         }
 
         [Test]
@@ -250,12 +264,26 @@ namespace LanguagesDictionary.Tests
             var okResult = new OkObjectResult(getResult.Result);
             Assert.That(okResult, Is.Not.Null);
             var json = JObject.Parse(okResult.Value.ToJson());
-            var data = json.First.Children().
-                Children().ToArray();
-            Assert.That(data.Count(), Is.EqualTo(1));
-            var getValue = data[0].ToObject<Values>();
-            Assert.That(getValue, Is.InstanceOf<Values>());
-            Assert.That(getValue.Value, Is.EqualTo("Value"));
+            if (json.First != null)
+            {
+                var data = json.First.Children().
+                    Children().ToArray();
+                Assert.That(data.Count(), Is.EqualTo(1));
+                var getValue = data[0].ToObject<Values>();
+                if (getValue != null)
+                {
+                    Assert.That(getValue, Is.InstanceOf<Values>());
+                    Assert.That(getValue.Value, Is.EqualTo("Value"));
+                }
+                else
+                {
+                    Assert.That(getValue, Is.Not.Null);
+                }
+            }
+            else
+            {
+                Assert.That(json.First, Is.Not.Null);
+            }
         }
 
         [Test]
@@ -327,12 +355,33 @@ namespace LanguagesDictionary.Tests
             var okResult = new OkObjectResult(getResult.Result);
             Assert.That(okResult, Is.Not.Null);
             var json = JObject.Parse(okResult.Value.ToJson());
-            var data = json.First.Children().
-                Children().ToArray();
-            Assert.That(data.Count(), Is.EqualTo(1));
-            var getValue = data[0].ToObject<Values>();
-            Assert.That(getValue, Is.InstanceOf<Values>());
-            Assert.That(getValue.Value, Is.EqualTo("NewValue"));
+            if (json.First != null)
+            {
+                var data = json.First.Children().
+                    Children().ToArray();
+                if (data != null)
+                {
+                    Assert.That(data.Count(), Is.EqualTo(1));
+                    var getValue = data[0].ToObject<Values>();
+                    if (getValue != null)
+                    {
+                        Assert.That(getValue, Is.InstanceOf<Values>());
+                        Assert.That(getValue.Value, Is.EqualTo("NewValue"));
+                    }
+                    else
+                    {
+                        Assert.That(getValue, Is.Not.Null);
+                    }
+                }
+                else
+                {
+                    Assert.That(data, Is.Not.Null);
+                }
+            }
+            else
+            {
+                Assert.That(json.First, Is.Not.Null);
+            }
         }
 
         [Test]

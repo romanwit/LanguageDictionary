@@ -13,7 +13,6 @@ export class ModalInput extends Component {
             modalOpen: this.props.modalInputOpen, 
             modalValue: this.props.modalValue
         };
-        console.log(`constructor ModalInput called modalOpen=${this.state.modalOpen}, modalValue=${this.state.modalValue} `);
     }
 
     handleChangeModalValue(evt) {
@@ -51,7 +50,6 @@ export class ModalInput extends Component {
     handleCloseModal() {
         
         setTimeout(()=>{
-            console.log("ModalInput handleCloseModal");
             this.props.closeInput(this.state.modalValue);
             this.setState({
                 modalOpen: false,
@@ -79,7 +77,6 @@ export class ModalInput extends Component {
             this.setState({modalOpen: false});
         } 
         if (this.props.modalValue != prevProps.modalValue) {
-            console.log(`ModalInput changing modalValue to ${this.props.modalValue}`);
             this.setState({modalValue: this.props.modalValue});
         }
 

@@ -48,13 +48,11 @@ export default function TabsDictionary() {
 
     React.useEffect(
         ()=>{
-            console.log("TabsDictionary useEffect");
             fetch(REQUEST_URLS.LanguagesList).
             then((response=>response.json())).
             then((json)=>{
                 setData(json);
                 setLoading(false);
-                console.log(`useEffect: languages ${json}, ${data}`);
             });
         }, []
     );
@@ -64,7 +62,6 @@ export default function TabsDictionary() {
             <p><em>Loading...</em></p>
         )
         else {
-            console.log(`rendering ${data}`);
             return (
         
                 <Box sx={{ width: '100%' }}>

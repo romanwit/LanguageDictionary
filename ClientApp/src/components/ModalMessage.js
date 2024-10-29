@@ -9,7 +9,6 @@ import '../css/ModalMessage.css';
 export class ModalMessage extends Component {
 
     constructor(props) {
-        console.log("ModalMessage constructor called");
         super(props);
         this.state = {
             modalOpen: this.props.modalOpen

@@ -73,13 +73,11 @@ export class Dictionary extends Component {
     }
 
     closeInput(newValue) {
-        console.log("Dictionary closeInput");
         this.setState({modalInputOpen: false, modalInputValue: ""});
         this.addRequest(newValue);
     }
 
     cancelInput() {
-        console.log("Dictionary cancelInput");
         this.setState({modalInputOpen: false, modalInputValue: ""});
     }
 

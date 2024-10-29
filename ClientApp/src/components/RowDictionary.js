@@ -113,16 +113,18 @@ export class RowDictionary extends Component {
 
         return <tr>
             <td>
-                <Button variant='contained'>
-                    <Edit onClick={this.onEditKey.bind(this)}/>
+                <Button variant='contained' 
+                    onClick={this.onEditKey.bind(this)}>
+                    <Edit/>
                 </Button>
                 &nbsp;
                 {this.state.keyName}
             </td>
             <td>
             <div>
-                <Button variant='contained'>
-                    <Edit onClick={this.editValue.bind(this)}/>
+                <Button variant='contained'
+                    onClick={this.editValue.bind(this)}>
+                    <Edit/>
                 </Button>
                 &nbsp;&nbsp;
                 {this.state.value}
