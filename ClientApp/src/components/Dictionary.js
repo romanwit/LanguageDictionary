@@ -25,21 +25,30 @@ export class Dictionary extends Component {
         this.fileInputRef = React.createRef();
     }
 
-    async populateDetails() {
-        const response = 
-            await fetch(`${REQUEST_URLS.Details}=${this.props.language}`);
-            const data = await response.json();
-        if  (response.status!=200){
-            console.log(`got error ${response.status} with msg ${data}`);
-            this.setState({
-                showModalMessage: true, 
-                modalMessage: `${data} `,
-                loading: false
-            });
-        } else {
-            this.setState({ dict: data})
-            this.setState({loading: false });
-        }
+    populateDetails() {
+        fetch(`${REQUEST_URLS.Details}=${this.props.language}`).
+        then(response=>response.json().
+                then(data => 
+                    ({
+                        status: response.status, 
+                        body: data
+                    }))).
+        then((data)=>{
+            if  (data.status!=200){
+                console.log(`got error ${data.status} with msg ${data.body}`);
+                this.setState({
+                    showModalMessage: true, 
+                    modalMessage: `${data.body} `,
+                    loading: false
+                });
+            } else {
+                this.setState({ dict: data.body})
+                this.setState({loading: false });
+            }
+        }).
+        catch((error) => alert(`Response LanguagesList returned ${error}`));
+        
+       
       }
 
     componentDidMount() {

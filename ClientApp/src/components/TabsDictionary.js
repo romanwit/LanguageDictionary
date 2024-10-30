@@ -49,11 +49,22 @@ export default function TabsDictionary() {
     React.useEffect(
         ()=>{
             fetch(REQUEST_URLS.LanguagesList).
-            then((response=>response.json())).
-            then((json)=>{
-                setData(json);
-                setLoading(false);
-            });
+            then(response=>response.json().
+                then(data => 
+                    ({
+                        status: response.status, 
+                        body: data
+                    }))).
+            then((data)=>{
+                console.log(`gotta ${JSON.stringify(data.body)} with status ${data.status}`)
+                if (data.status==200) {
+                    setData(data.body);
+                    setLoading(false);
+                } else {
+                    throw new Error(`status ${data.status}`);
+                }
+            }).
+            catch((error) => alert(`Response LanguagesList returned ${error}`))
         }, []
     );
 
@@ -63,7 +74,7 @@ export default function TabsDictionary() {
         )
         else {
             return (
-        
+
                 <Box sx={{ width: '100%' }}>
                     <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
                     <Tabs value={value} onChange={handleChange} aria-label="basic tabs example">

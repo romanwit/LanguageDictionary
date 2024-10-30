@@ -2,7 +2,6 @@ import React from 'react';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import { RowDictionary } from '../components/RowDictionary';
-import { ModalInput } from '../components/ModalInput';
 import { REQUEST_URLS } from '../Constants';
 import fetchMock from 'jest-fetch-mock';
 
