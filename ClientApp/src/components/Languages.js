@@ -15,18 +15,27 @@ const Languages = (newLanguage) => {
     const [showModalMessage, setShowModalMessage] = useState(false);
     const [modalMessage, setModalMessage] = useState("");
 
-    const populateLanguages = async () => {
+    const populateLanguages = () => {
        
         fetch(REQUEST_URLS.LanguagesList).
-        then((response=>response.json())).
-        then((json)=>{
-            setDict(json);
-            setLoading(false);
-        });
+        then(response=>response.json().
+        then(data => 
+            ({
+                status: response.status, 
+                body: data
+            }))).
+        then((data)=>{
+            if (data.status==200) {
+                setDict(data.body);
+                setLoading(false);
+            } else {
+                console.log(`got error ${data.status} with msg ${data.body}`);
+            }
+        }).catch((error) => alert(`(Languages) Response LanguagesList returned ${error}`));
     }
 
-    const addLanguageRequest = async (newLanguage) => {
-        var response = await fetch(REQUEST_URLS.AddLanguage, {
+    const addLanguageRequest = (newLanguage) => {
+        fetch(REQUEST_URLS.AddLanguage, {
             
             method: 'POST',
             headers: {
@@ -34,15 +43,21 @@ const Languages = (newLanguage) => {
             },
             body: JSON.stringify({Language: newLanguage})    
             
-        });
-        const data = await response.json();
-        if (response.status==200) {
-            populateLanguages();
-        } else {
-            console.log(`got error ${response.status}`);
-            setShowModalMessage(true);
-            setModalMessage(data);
-        }
+        }).then(response=>response.json().
+        then(data => 
+            ({
+                status: response.status, 
+                body: data
+            }))).
+        then((data)=>{
+            if (data.status==200) {
+                populateLanguages();
+            } else {
+                console.log(`got error ${data.status}`);
+                setShowModalMessage(true);
+                setModalMessage(data.body);
+            }
+        }).catch((error) => alert(`Response AddLanguage returned ${error}`));
     }
 
     const onClickPlus = () => {

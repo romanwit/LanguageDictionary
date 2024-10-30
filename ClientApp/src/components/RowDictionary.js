@@ -32,8 +32,8 @@ export class RowDictionary extends Component {
         });
     }
 
-    async editValueRequest(args) {
-        var response = await fetch(REQUEST_URLS.EditValue, {
+    editValueRequest(args) {
+        fetch(REQUEST_URLS.EditValue, {
             
             method: 'POST',
             headers: {
@@ -41,14 +41,23 @@ export class RowDictionary extends Component {
             },
             body: JSON.stringify(args)    
             
-        });
-        const data = await response.json();
-        if (response.status==200) {
-            this.setState({
-                lastUpdatedValue: data.value,
-                value: data.value
-            });
-        }
+        }).then(response=>response.json().
+        then(data => 
+            ({
+                status: response.status, 
+                body: data
+            }))).
+        then((data)=> {
+            if (data.status==200) {
+                this.setState({
+                    lastUpdatedValue: data.body.value,
+                    value: data.body.value
+                });
+            } else {
+                console.log(`got error ${data.status} with msg ${data.body}`);
+ 
+            }
+        }).catch((error) => alert(`Response LanguagesList returned ${error}`));
     }
 
     onClick(newValue) {
@@ -85,8 +94,8 @@ export class RowDictionary extends Component {
         this.setState({edit: false});
     }
 
-    async editKeyRequest(args) {
-        var response = await fetch(REQUEST_URLS.EditKey, {
+    editKeyRequest(args) {
+        fetch(REQUEST_URLS.EditKey, {
             
             method: 'POST',
             headers: {
@@ -94,13 +103,21 @@ export class RowDictionary extends Component {
             },
             body: JSON.stringify(args)    
             
-        });
-        const data = await response.json();
-        if (response.status==200) {
-            this.setState({
-                keyName: data.keyValue
-            });
-        }
+        }).then(response=>response.json().
+        then(data => 
+            ({
+                status: response.status, 
+                body: data
+            }))).
+        then((data)=>{
+            if (data.status==200) {
+                this.setState({
+                    keyName: data.body.keyValue
+                });
+            } else {
+                console.log(`got error ${data.status} with msg ${data.body}`);
+            }
+        }).catch((error) => alert(`Response LanguagesList returned ${error}`));
     }
 
     onCancelEditKey() {

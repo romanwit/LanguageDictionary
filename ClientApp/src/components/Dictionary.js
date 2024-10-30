@@ -59,8 +59,8 @@ export class Dictionary extends Component {
         this.setState({modalInputOpen: true, modalInputValue: ""});
     }
 
-    async addRequest(arg) {
-        var response = await fetch(REQUEST_URLS.AddKey, {
+    addRequest(arg) {
+        fetch(REQUEST_URLS.AddKey, {
             
             method: 'POST',
             headers: {
@@ -68,17 +68,24 @@ export class Dictionary extends Component {
             },
             body: JSON.stringify({newKey: arg})    
             
-        });
-        const data = await response.json();
-        if (response.status==200) {
-            this.populateDetails();
-        } else {
-            console.log(`got error ${response.status}`);
-            this.setState({
-                showModalMessage: true, 
-                modalMessage: `${data} `
-            });
-        }
+        }).then(response=>response.json().then(
+            data=>({
+                status: response.status,
+                body:data
+            })
+        )).then(data=>{
+            if (data.status==200) {
+                this.populateDetails();
+            } else {
+                console.log(`got error ${data.status}`);
+                this.setState({
+                    showModalMessage: true, 
+                    modalMessage: `${data.body}`
+                });
+            }
+        }).catch((error) => alert(`Response addKey returned ${error}`));
+        
+        
     }
     
     closeModalMessage() {
