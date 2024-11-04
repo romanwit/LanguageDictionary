@@ -29,25 +29,25 @@ public class DictionaryInformationController : ApiController
     {
 
         /*
-        var killValues =
-            _context.Values;//.Where(row => row.RowId != 1);
-        foreach (var killValue in killValues)
-        {
-            _context.Values.Remove(killValue);
-        }
-        var killKeys =
-            _context.Keys;//.Where(row => row.KeyId != 1);
-        foreach (var killKey in killKeys)
-        {
-            _context.Keys.Remove(killKey);
-        }
-        var killLanguages =
-            _context.Languages;//.Where(row => row.KeyId != 1);
-        foreach (var killLanguage in killLanguages)
-        {
-            _context.Languages.Remove(killLanguage);
-        }
-        _context.SaveChanges();
+                var killValues =
+                    _context.Values;//.Where(row => row.RowId != 1);
+                foreach (var killValue in killValues)
+                {
+                    _context.Values.Remove(killValue);
+                }
+                var killKeys =
+                    _context.Keys;//.Where(row => row.KeyId != 1);
+                foreach (var killKey in killKeys)
+                {
+                    _context.Keys.Remove(killKey);
+                }
+                var killLanguages =
+                    _context.Languages;//.Where(row => row.KeyId != 1);
+                foreach (var killLanguage in killLanguages)
+                {
+                    _context.Languages.Remove(killLanguage);
+                }
+                _context.SaveChanges();
         */
 
         if (!_context.Languages.Select(row => row.LanguageValue).

@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 
 public class ErrorController : ApiController
 {
+    [HttpGet]
     [Route("/error")]
     public IActionResult HandleError()
     {

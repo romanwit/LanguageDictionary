@@ -20,8 +20,8 @@ builder.Services.AddDbContext<DictionaryDBContext>(
         builder.Configuration.GetConnectionString("DictionaryConnection"))
 );
 
-builder.Services.AddControllers();
-builder.Services.AddEndpointsApiExplorer();
+//builder.Services.AddControllers();
+//builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>
 {
     c.SwaggerDoc("v1", new OpenApiInfo { Title = "Languages Dictionary", Version = "v1" });
@@ -39,13 +39,15 @@ if (!app.Environment.IsDevelopment())
 else
 {
     app.UseDeveloperExceptionPage();
-}
-
-app.UseSwagger();
-app.UseSwaggerUI(c =>
+    app.MapSwagger();
+    app.UseSwagger();
+    app.UseSwaggerUI(c =>
     {
         c.SwaggerEndpoint("v1/swagger.json", "Languages Dictionary");
     });
+}
+
+
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();
