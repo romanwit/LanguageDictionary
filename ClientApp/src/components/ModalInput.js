@@ -87,7 +87,7 @@ export class ModalInput extends Component {
         return (
         <Modal open={this.state.modalOpen}>
             <Box className="modal-box">
-                <b style={{width:'100%', textAlign:'center'}}>
+                <b style={{width:'90%', marginLeft: '2%', textAlign:'center'}}>
                     {this.props.caption}
                 </b>
                 <div style={{width:'100%', textAlign: 'center'}}>
@@ -100,21 +100,30 @@ export class ModalInput extends Component {
                         style={{height:38, width:'95%'}}>
                     </input>
                     </div>
-                    <div style={{width: '100%', textAlign: 'center', marginTop: 10}}>
-                        <Button 
-                            variant='contained'
-                            onClick={this.handleCloseModal.bind(this)}
-                            style={{height:45}}
-                        >
-                            <Check/>
-                        </Button>
-                        <label style={{width:'50%'}}></label>
-                        <Button variant='contained'
-                            onClick={this.handleCancel.bind(this)}
-                            style={{height:45}}
-                        >
-                            <Close/>
-                        </Button>
+                    <div style={{display: 'flex', justifyContent: 'center'}}>
+                        <div style={{
+                            display: 'flex', 
+                            justifyContent: 'space-between', 
+                            left: '10%', 
+                            textAlign: 'center', 
+                            marginTop: 10,
+                            width: '90%'
+                            }}>
+                            <Button 
+                                variant='contained'
+                                onClick={this.handleCloseModal.bind(this)}
+                                style={{height:45}}
+                            >
+                                <Check/>
+                            </Button>
+                            
+                            <Button variant='contained'
+                                onClick={this.handleCancel.bind(this)}
+                                style={{height:45}}
+                            >
+                                <Close/>
+                            </Button>
+                        </div>
                     </div>
             </Box>
         </Modal>);
