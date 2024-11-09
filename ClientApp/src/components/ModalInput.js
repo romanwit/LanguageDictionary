@@ -87,7 +87,7 @@ export class ModalInput extends Component {
         return (
         <Modal open={this.state.modalOpen}>
             <Box className="modal-box">
-                <b style={{width:'90%', marginLeft: '2%', textAlign:'center'}}>
+                <b style={{width:'90%', marginLeft: '5%', textAlign:'center'}}>
                     {this.props.caption}
                 </b>
                 <div style={{width:'100%', textAlign: 'center'}}>

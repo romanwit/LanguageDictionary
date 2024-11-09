@@ -267,4 +267,72 @@ public class DictionaryInformationController : ApiController
         _logger.LogInformation($"Language {args.Language} added successfully");
         return new JsonResult(newLanguage);
     }
+
+    [HttpPost]
+    [Route("EditLanguage")]
+    public JsonResult EditLanguage(EditLanguageArgs args)
+    {
+
+        if (!_context.Languages.Any(
+            row => row.LanguageValue == args.OldLanguage))
+        {
+            var response = new JsonResult($"Language {args.OldLanguage} does not exist");
+            response.StatusCode = 404;
+            _logger.LogError($"Key {args.OldLanguage} does not exist. Returning 403");
+            return response;
+        }
+
+        var row = _context.Languages.FirstOrDefault(
+            row => row.LanguageValue == args.OldLanguage);
+        if (row != null)
+        {
+            row.LanguageValue = args.NewLanguage;
+            _context.SaveChanges();
+            _logger.LogInformation($"Language {args.OldLanguage} updated successfully to {args.NewLanguage}");
+            return new JsonResult(row);
+
+        }
+        else
+        {
+            throw new Exception("row is null");
+        }
+
+    }
+
+    [HttpPost]
+    [Route("DeleteLanguage")]
+    public JsonResult DeleteLanguage(DeleteLanguageArgs args)
+    {
+
+        if (!_context.Languages.Any(
+            row => row.LanguageValue == args.Language))
+        {
+            var response = new JsonResult($"Language {args.Language} does not exist");
+            response.StatusCode = 404;
+            _logger.LogError($"Key {args.Language} does not exist. Returning 403");
+            return response;
+        }
+
+        var row = _context.Languages.FirstOrDefault(
+            row => row.LanguageValue == args.Language);
+        if (row != null)
+        {
+            var killValues = _context.Values.Where(
+                row => row.Language.LanguageValue == args.Language);
+            foreach (var killValue in killValues)
+            {
+                _context.Values.Remove(killValue);
+            }
+            _context.Languages.Remove(row);
+            _context.SaveChanges();
+            _logger.LogInformation($"Language {args.Language} deleted successfully");
+            return new JsonResult(row);
+
+        }
+        else
+        {
+            throw new Exception("row is null");
+        }
+
+    }
 }
