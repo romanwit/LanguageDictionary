@@ -1,0 +1,508 @@
+{
+	"info": {
+		"_postman_id": "6790f516-a89c-41c8-b873-2f3917956a8c",
+		"name": "LanguagesDictionary",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "38186293"
+	},
+	"item": [
+		{
+			"name": "AddLanguage",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Response status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disabledSystemHeaders": {}
+			},
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"language\": \"test\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{localPort\n}}/DictionaryInformation/AddLanguage",
+					"host": [
+						"{{localPort\n}}"
+					],
+					"path": [
+						"DictionaryInformation",
+						"AddLanguage"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "AddLanguageAlreadyExist",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Response status code is 406\", function () {",
+							"    pm.response.to.have.status(406);",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"language\": \"test\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{localPort\n}}/DictionaryInformation/AddLanguage",
+					"host": [
+						"{{localPort\n}}"
+					],
+					"path": [
+						"DictionaryInformation",
+						"AddLanguage"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "EditLanguage",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Response status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"oldLanguage\": \"test\",\n    \"newLanguage\": \"test1\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{localPort\n}}/DictionaryInformation/EditLanguage",
+					"host": [
+						"{{localPort\n}}"
+					],
+					"path": [
+						"DictionaryInformation",
+						"EditLanguage"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "AddKey",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Response status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"newKey\": \"newKey1\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{localPort\n}}/DictionaryInformation/addKey",
+					"host": [
+						"{{localPort\n}}"
+					],
+					"path": [
+						"DictionaryInformation",
+						"addKey"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "AddKeyAlreadyExist",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Response status code is 406\", function () {",
+							"    pm.response.to.have.status(406);",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"newKey\": \"newKey1\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{localPort\n}}/DictionaryInformation/addKey",
+					"host": [
+						"{{localPort\n}}"
+					],
+					"path": [
+						"DictionaryInformation",
+						"addKey"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "AddValue",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Response status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"keyValue\": \"newKey1\",\n    \"languageValue\": \"test1\",\n    \"value\": \"newValue1\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{localPort\n}}/DictionaryInformation/Edit",
+					"host": [
+						"{{localPort\n}}"
+					],
+					"path": [
+						"DictionaryInformation",
+						"Edit"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "EditValueForKeyDoesnExist",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Response status code is 404\", function () {",
+							"    pm.response.to.have.status(404);",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"keyValue\": \"doesntexistkey\",\n    \"languageValue\": \"test1\",\n    \"value\": \"newValue1\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{localPort\n}}/DictionaryInformation/Edit",
+					"host": [
+						"{{localPort\n}}"
+					],
+					"path": [
+						"DictionaryInformation",
+						"Edit"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GetKeysList",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Response status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"",
+							"pm.test(\"Response time is within an acceptable range\", function () {",
+							"  pm.expect(pm.response.responseTime).to.be.below(200);",
+							"});",
+							"",
+							"",
+							"pm.test(\"Presence of fields - rowId, key, language, and value\", function () {",
+							"    const responseData = pm.response.json();",
+							"    ",
+							"    pm.expect(responseData).to.be.an('array').that.is.not.empty;",
+							"    responseData.forEach(function(entry) {",
+							"        pm.expect(entry).to.have.property('rowId');",
+							"        pm.expect(entry).to.have.property('key');",
+							"        pm.expect(entry).to.have.property('language');",
+							"        pm.expect(entry).to.have.property('value');",
+							"    });",
+							"});",
+							"",
+							"",
+							"pm.test(\"Key newKey1 found\", function () {",
+							"    const responseData = pm.response.json();",
+							"    ",
+							"    pm.expect(responseData).to.be.an('array').that.is.not.empty;",
+							"    ",
+							"    let keyFound = false;",
+							"    responseData.forEach(function(item) {",
+							"        if (item.key && item.key.keyValue === \"newKey1\") {",
+							"            keyFound = true;",
+							"        }",
+							"    });",
+							"    pm.expect(keyFound).to.be.true;",
+							"",
+							"    let valueFound = false;",
+							"    responseData.forEach(function(item) {",
+							"        if (item.value === \"newValue1\") {",
+							"            valueFound = true;",
+							"        }",
+							"    });",
+							"    pm.expect(valueFound).to.be.true;",
+							"",
+							"",
+							"});",
+							"",
+							"",
+							"",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{localPort\n}}/DictionaryInformation/?language=test1",
+					"host": [
+						"{{localPort\n}}"
+					],
+					"path": [
+						"DictionaryInformation",
+						""
+					],
+					"query": [
+						{
+							"key": "language",
+							"value": "test1"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "DeleteLanguage",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Response status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"language\": \"test1\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{localPort\n}}/DictionaryInformation/DeleteLanguage",
+					"host": [
+						"{{localPort\n}}"
+					],
+					"path": [
+						"DictionaryInformation",
+						"DeleteLanguage"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "DeleteLanguageDoesnExist",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Response status code is 404\", function () {",
+							"    pm.response.to.have.status(404);",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"language\": \"test1\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{localPort\n}}/DictionaryInformation/DeleteLanguage",
+					"host": [
+						"{{localPort\n}}"
+					],
+					"path": [
+						"DictionaryInformation",
+						"DeleteLanguage"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "DeleteKey",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Response status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"key\": \"newKey1\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{localPort\n}}/DictionaryInformation/deleteKey",
+					"host": [
+						"{{localPort\n}}"
+					],
+					"path": [
+						"DictionaryInformation",
+						"deleteKey"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
