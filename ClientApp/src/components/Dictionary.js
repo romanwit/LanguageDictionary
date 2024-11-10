@@ -124,7 +124,7 @@ export class Dictionary extends Component {
                     ref={this.fileInputRef}
                     style={{ display: 'none' }}
                     onChange={this.handleFileChange.bind(this)} 
-                   onInput={this.handleFileChange.bind(this)} />
+                    onInput={this.handleFileChange.bind(this)} />
                 
                 {this.state.Folder}&nbsp;
                 <Button variant='contained' 
@@ -156,6 +156,7 @@ export class Dictionary extends Component {
                             key = {row.key.keyValue}
                             keyName = {row.key.keyValue}
                             value = {row.value} 
+                            updateWholeDictionary = {this.populateDetails.bind(this)}
                         />
                     )}
                     </tbody>

@@ -529,5 +529,149 @@ namespace LanguagesDictionary.Tests
             _mockContext.Verify(c => c.Languages.Add(It.IsAny<Languages>()), Times.Once);
             _mockContext.Verify(c => c.SaveChanges(), Times.Once);
         }
+
+        [Test]
+        public void DeleteLanguage_WhenLanguageExist()
+        {
+            // Arrange
+            var args = new DeleteLanguageArgs
+            {
+                Language = "Spanish"
+            };
+
+            var key = new Keys
+            {
+                KeyId = 1,
+                KeyValue = "Key1"
+            };
+
+            var spanish = new Languages
+            {
+                LanguageId = 1,
+                LanguageValue = "Spanish"
+            };
+
+            var english = new Languages
+            {
+                LanguageId = 2,
+                LanguageValue = "English"
+            };
+
+            var languageList = new List<Languages>() {
+                spanish, english};
+            var languages = languageList.AsQueryable();
+
+            var valuesList = new List<Values> {
+                new Values {
+                    RowId = 1,
+                    Language = spanish,
+                    Key = key,
+                    Value = "SpanishValue1"
+                },
+                new Values {
+                    RowId = 2,
+                    Language = english,
+                    Key = key,
+                    Value = "EnglishValue1"
+                }
+
+            };
+
+            var values = valuesList.AsQueryable();
+
+            var mockLanguages = new Mock<DbSet<Languages>>();
+            SetupMockDbSet(mockLanguages, languages);
+
+            mockLanguages.Setup(
+                m => m.Remove(It.IsAny<Languages>())).
+            Callback<Languages>(c =>
+            {
+                languageList.Remove(c);
+            });
+
+
+            var mockValues = new Mock<DbSet<Values>>();
+            SetupMockDbSet(mockValues, values);
+            mockValues.Setup(
+                m => m.RemoveRange(It.IsAny<IEnumerable<Values>>())).
+            Callback<IEnumerable<Values>>(values =>
+            {
+                var valuesToRemove = values.ToList();
+                foreach (var value in valuesToRemove)
+                {
+                    valuesList.Remove(value);
+                }
+            });
+
+            _mockContext.Setup(c => c.Languages).Returns(mockLanguages.Object);
+            _mockContext.Setup(c => c.Values).Returns(mockValues.Object);
+
+            Assert.That(_mockContext.Object.Languages.Count(), Is.EqualTo(2));
+            Assert.That(_mockContext.Object.Values.Count(), Is.EqualTo(2));
+
+            // Act
+            var result = _controller.DeleteLanguage(args);
+
+            // Assert
+            Assert.That(result, Is.InstanceOf<JsonResult>());
+
+            Assert.That(result.Value, Is.InstanceOf<Languages>());
+            var language = result.Value as Languages;
+            if (language == null)
+            {
+                throw new Exception("Language conversion error");
+            }
+            else
+            {
+                Assert.That(language.LanguageValue, Is.EqualTo("Spanish"));
+            }
+
+            Assert.That(_mockContext.Object.Languages.Count(), Is.EqualTo(1));
+            Assert.That(_mockContext.Object.Values.Count(), Is.EqualTo(1));
+
+        }
+
+        [Test]
+        public void DeleteLanguage_WhenLanguageDoesntExist()
+        {
+            // Arrange
+            var args = new DeleteLanguageArgs
+            {
+                Language = "Spanish"
+            };
+
+            var languageList = new List<Languages>() {
+                new Languages {
+                    LanguageValue = "English" }
+                };
+            var languages = languageList.AsQueryable();
+
+            var values = new List<Values>().AsQueryable();
+
+            var mockLanguages = new Mock<DbSet<Languages>>();
+            SetupMockDbSet(mockLanguages, languages);
+
+            mockLanguages.Setup(
+                m => m.Remove(It.IsAny<Languages>())).
+            Callback<Languages>(c => languageList.Remove(c));
+
+
+            var mockValues = new Mock<DbSet<Values>>();
+            SetupMockDbSet(mockValues, values);
+
+            _mockContext.Setup(c => c.Languages).Returns(mockLanguages.Object);
+            _mockContext.Setup(c => c.Values).Returns(mockValues.Object);
+
+            // Act
+            var result = _controller.DeleteLanguage(args);
+
+            // Assert
+            Assert.That(result, Is.InstanceOf<JsonResult>());
+            Assert.That(result.StatusCode, Is.EqualTo(404));
+
+
+        }
     }
+
+
 }

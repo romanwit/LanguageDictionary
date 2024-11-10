@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
 import Edit from '@mui/icons-material/Edit';
+import Clear from '@mui/icons-material/Clear';
 import Button from '@mui/material/Button';
 import '../css/ModalInputKey.css';
 import { ModalInput } from './ModalInput';
@@ -76,6 +77,10 @@ export class RowDictionary extends Component {
         });
     }
 
+    onDeleteKey() {
+        this.deleteKeyRequest({Key: this.state.keyName});
+    }
+
     onEditKey() {
         this.setState({
             edit: true,
@@ -92,6 +97,30 @@ export class RowDictionary extends Component {
             NewKey: newKey 
         });
         this.setState({edit: false});
+    }
+
+    deleteKeyRequest(args) {
+        fetch(REQUEST_URLS.DeleteKey, {
+            
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(args)    
+            
+        }).then(response=>response.json().
+        then(data => 
+            ({
+                status: response.status, 
+                body: data
+            }))).
+        then((data)=>{
+            if (data.status==200) {
+                this.props.updateWholeDictionary();
+            } else {
+                console.log(`got error ${data.status} with msg ${data.body}`);
+            }
+        }).catch((error) => alert(`Response DeleteKey returned ${error}`));
     }
 
     editKeyRequest(args) {
@@ -117,7 +146,7 @@ export class RowDictionary extends Component {
             } else {
                 console.log(`got error ${data.status} with msg ${data.body}`);
             }
-        }).catch((error) => alert(`Response LanguagesList returned ${error}`));
+        }).catch((error) => alert(`Response EditKey returned ${error}`));
     }
 
     onCancelEditKey() {
@@ -133,6 +162,11 @@ export class RowDictionary extends Component {
                 <Button variant='contained' 
                     onClick={this.onEditKey.bind(this)}>
                     <Edit/>
+                </Button>
+                &nbsp;
+                <Button variant='contained' 
+                    onClick={this.onDeleteKey.bind(this)}>
+                    <Clear/>
                 </Button>
                 &nbsp;
                 {this.state.keyName}

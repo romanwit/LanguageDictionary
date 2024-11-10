@@ -6,5 +6,6 @@ export const REQUEST_URLS = {
     EditKey: "dictionaryinformation/editKey",
     AddLanguage: "dictionaryinformation/addLanguage",
     EditLanguage: "dictionaryinformation/editLanguage",
-    DeleteLanguage: "dictionaryinformation/deleteLanguage"
+    DeleteLanguage: "dictionaryinformation/deleteLanguage",
+    DeleteKey: "dictionaryinformation/deleteKey"
 }

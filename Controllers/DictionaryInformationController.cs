@@ -234,6 +234,43 @@ public class DictionaryInformationController : ApiController
         }
     }
 
+    [HttpPost]
+    [Route("DeleteKey")]
+    public JsonResult DeleteKey(DeleteKeyArgs args)
+    {
+
+        if (!_context.Keys.Any(
+            row => row.KeyValue == args.Key))
+        {
+            var response = new JsonResult($"Language {args.Key} does not exist");
+            response.StatusCode = 404;
+            _logger.LogError($"Key {args.Key} does not exist. Returning 404");
+            return response;
+        }
+
+        var row = _context.Keys.FirstOrDefault(
+            row => row.KeyValue == args.Key);
+        if (row != null)
+        {
+            var killValues = _context.Values.Where(
+                row => row.Key.KeyValue == args.Key);
+            foreach (var killValue in killValues)
+            {
+                _context.Values.Remove(killValue);
+            }
+            _context.Keys.Remove(row);
+            _context.SaveChanges();
+            _logger.LogInformation($"Language {args.Key} deleted successfully");
+            return new JsonResult(row);
+
+        }
+        else
+        {
+            throw new Exception("row is null");
+        }
+
+    }
+
     [HttpGet]
     [Route(RequestsUrls.ListOfLanguagesRequest)]
     public IEnumerable<string> ListOfLanguages()
@@ -278,7 +315,7 @@ public class DictionaryInformationController : ApiController
         {
             var response = new JsonResult($"Language {args.OldLanguage} does not exist");
             response.StatusCode = 404;
-            _logger.LogError($"Key {args.OldLanguage} does not exist. Returning 403");
+            _logger.LogError($"Key {args.OldLanguage} does not exist. Returning 247");
             return response;
         }
 
@@ -309,7 +346,7 @@ public class DictionaryInformationController : ApiController
         {
             var response = new JsonResult($"Language {args.Language} does not exist");
             response.StatusCode = 404;
-            _logger.LogError($"Key {args.Language} does not exist. Returning 403");
+            _logger.LogError($"Key {args.Language} does not exist. Returning 404");
             return response;
         }
 
@@ -319,10 +356,7 @@ public class DictionaryInformationController : ApiController
         {
             var killValues = _context.Values.Where(
                 row => row.Language.LanguageValue == args.Language);
-            foreach (var killValue in killValues)
-            {
-                _context.Values.Remove(killValue);
-            }
+            _context.Values.RemoveRange(killValues);
             _context.Languages.Remove(row);
             _context.SaveChanges();
             _logger.LogInformation($"Language {args.Language} deleted successfully");
